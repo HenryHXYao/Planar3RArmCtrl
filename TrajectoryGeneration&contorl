@@ -1,0 +1,60 @@
+' parameter setup
+deltat = 0.001
+l1 = 400
+l2 = 400
+l3 = 100
+
+' coordinate transform to platform frame
+theta1i = (180 - MPOS AXIS(2))/180*PI
+theta2i = (180 - MPOS AXIS(4))/180*PI
+theta3i = (180 - MPOS AXIS(6))/180*PI
+
+' Arm end tip initial state
+xi = l1*COS(theta1i)+l2*COS(theta1i+theta2i)+l3*COS(theta1i+theta2i+theta3i)
+yi = l1*SIN(theta1i)+l2*SIN(theta1i+theta2i)+l3*SIN(theta1i+theta2i+theta3i)
+thetai = theta1i+theta2i+theta3i
+'PRINT xi,yi,thetai/PI*180
+
+' Trajectory Generation
+t = 5
+sx = -20 'mm/s
+sy = 0
+stheta = 5/180*PI
+num_p = t/deltat
+
+FOR n = 0 TO num_p STEP 1
+' Trajectory Planning in Cartesian Space
+    x = xi + sx * n * deltat
+    y = yi + sy * n * deltat
+    theta = thetai + stheta * n * deltat
+' IK
+' solve theta2
+    cal1 = ((x-l3*COS(theta))^2+(y-l3*SIN(theta))^2-l1^2-l2^2)/(2*l1*l2)
+    theta2s=ACOS(cal1)
+    
+' solve theta1
+    cal2 = (x-l3*COS(theta))/((l1+l2*COS(theta2s))^2+(l2*SIN(theta2s))^2)^0.5
+    theta1s = ACOS(cal2) - ATAN(l2*SIN(theta2s)/(l1+l2*COS(theta2s)))
+    
+' solve theta3
+    theta3s = theta- theta1s- theta2s
+    
+' coordinate transform to Arm frame
+    theta1 = 180 - theta1s/PI*180
+    theta2 = 180 - theta2s/PI*180
+    theta3 = 180 - theta3s/PI*180
+    
+' Store trajectory in Table
+    TABLE (n ,theta1)
+    TABLE (num_p+1+n ,theta2)
+    TABLE (2*num_p+2+n ,theta3)
+    PRINT n
+NEXT n
+
+' Move
+BASE(2)
+CAM ( 0 , num_p , UNITS AXIS(2) , SPEED AXIS(2)*t )
+BASE(4)
+CAM ( num_p+1 , 2*num_p+1 , UNITS AXIS(4) , SPEED AXIS(4)*t )
+BASE(6)
+CAM ( 2*num_p+2 , 3*num_p+2 , UNITS AXIS(6) , SPEED AXIS(6)*t )
