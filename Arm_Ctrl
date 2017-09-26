@@ -1,0 +1,19 @@
+'Sampling
+ts = 1 ' unit:millisecond
+t = 15 'unit:second
+num_para = 3 'number of parameter to be recorded
+
+SCOPE(ON,ts/SERVO_PERIOD*1000,0,t/ts*1000*num_para,MPOS AXIS(2), MPOS AXIS(4), MPOS AXIS(6))
+TRIGGER
+
+' Move following the designed trajectory
+deltat = VR(1)
+t = VR(2)
+num_p = t/deltat
+
+BASE(2)
+CAM ( 0 , num_p , UNITS AXIS(2) , SPEED AXIS(2)*t )
+BASE(4)
+CAM ( num_p+1 , 2*num_p+1 , UNITS AXIS(4) , SPEED AXIS(4)*t )
+BASE(6)
+CAM ( 2*num_p+2 , 3*num_p+2 , UNITS AXIS(6) , SPEED AXIS(6)*t )
