@@ -1,16 +1,18 @@
-'Sampling
-ts = 1 ' unit:millisecond
-t = 15 'unit:second
-num_para = 3 'number of parameter to be recorded
-
-SCOPE(ON,ts/SERVO_PERIOD*1000,0,t/ts*1000*num_para,MPOS AXIS(2), MPOS AXIS(4), MPOS AXIS(6))
-TRIGGER
-
 ' Move following the designed trajectory
 deltat = VR(1)
 t = VR(2)
 num_p = t/deltat
 
+' sampling parameter
+ts = 1 ' unit:millisecond
+t_sample = 10 'unit:second
+num_para = 3 'number of parameter to be recorded
+
+' Start sampling
+SCOPE(ON,ts/SERVO_PERIOD*1000,4*num_p,4*num_p+t_sample/ts*1000*num_para,MPOS AXIS(2), MPOS AXIS(4), MPOS AXIS(6))
+TRIGGER
+
+' Start manipulator
 BASE(2)
 CAM ( 0 , num_p , UNITS AXIS(2) , SPEED AXIS(2)*t )
 BASE(4)

@@ -17,18 +17,18 @@ thetai = theta1i+theta2i+theta3i
 'PRINT xi,yi,thetai/PI*180
 
 ' Trajectory Generation
-t = 5
+t = 10
 VR(2) = t
-sx = -40 'mm/s
-sy = 40
+sx = -8 'mm/s
+sy = 4
 stheta = 0/180*PI
 num_p = t/deltat
 
 FOR n = 0 TO num_p STEP 1
 ' Trajectory Planning in Cartesian Space
-    x = xi + sx * n * deltat
-    y = yi + sy * n * deltat
-    theta = thetai + stheta * n * deltat
+    x = xi + sx *(n * deltat)^2/2
+    y = yi + sy *(n * deltat)^2/2
+    theta = thetai + stheta *(n * deltat)^2/2
 ' IK
 ' solve theta2
     cal1 = ((x-l3*COS(theta))^2+(y-l3*SIN(theta))^2-l1^2-l2^2)/(2*l1*l2)
