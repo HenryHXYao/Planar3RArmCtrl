@@ -1,0 +1,13 @@
+OPEN#40 AS "sd:data1.txt" FOR OUTPUT(0)
+deltat = VR(1)
+t = VR(2)
+num_p = t/deltat
+
+i=1
+
+WHILE i<15000
+    PRINT#40, TABLE(4*num_p+i)
+    i=i+1
+WEND
+
+CLOSE#40

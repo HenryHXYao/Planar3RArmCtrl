@@ -1,0 +1,29 @@
+' Joint Space Trajectory Generation
+' parameter setup
+deltat = 0.001
+VR(1) = deltat
+theta1i = MPOS AXIS(2)
+theta2i = MPOS AXIS(4)
+
+' Trajectory Generation
+t = 3
+VR(2) = t
+num_p = t/deltat
+a = 2
+a2 = 0.5
+p = 1
+p2 = 1.5
+w = 2*PI/p
+w2 = 2*PI/p2
+
+FOR n = 0 TO num_p STEP 1
+    theta1 = theta1i + (-a/w^2*SIN(w*n*deltat)+a/w*n*deltat)/PI*180
+    theta2 = theta2i + (-a2/w2^2*SIN(w2*n*deltat)+a2/w2*n*deltat)/PI*180
+    theta3 = 180
+
+' Store trajectory in Table
+    TABLE (n ,theta1)
+    TABLE (num_p+1+n ,theta2)
+    TABLE (2*num_p+2+n ,theta3)
+    PRINT n
+NEXT n

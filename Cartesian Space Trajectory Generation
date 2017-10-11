@@ -1,3 +1,4 @@
+' Cartesian Space Trajectory Generation
 ' parameter setup
 deltat = 0.001
 l1 = 400

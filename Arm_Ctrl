@@ -5,7 +5,7 @@ num_p = t/deltat
 
 ' sampling parameter
 ts = 1 ' unit:millisecond
-t_sample = 10 'unit:second
+t_sample = 5 'unit:second
 num_para = 3 'number of parameter to be recorded
 
 ' Start sampling
